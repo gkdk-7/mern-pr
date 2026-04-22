@@ -1,0 +1,119 @@
+<!doctype html>    <!-- this is the document type declaration for HTML5 -->
+<html lang="en">     <!-- this is the opening tag for the HTML document, with the language attribute set to English -->
+  <head>
+    <meta charset="UTF-8" />   <!-- this meta tag specifies the character encoding for the webpage, which is UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />      <!-- this meta tag ensures that the webpage is responsive and scales properly on different devices -->
+    <title>ASSIGNMENT ON HTML LISTS</title>
+  </head>
+  <body>
+    <div class="container">   <!--this is the container for the entire page-->
+      <div class="column">
+        <h2>Unordered Lists</h2>   <!--this is the heading for the unordered lists section-->
+        <li><b>Disc</b></li>
+        <ul type="disc">          <!-- this is the unordered list with disc type bullets -->            
+          <li>first Item</li>
+          <li>second Item</li>
+          <li>third Item</li>
+        </ul>
+        <li><b>Square</b></li>
+        <ul type="square">        <!-- this is the unordered list with square type bullets -->
+          <li>first Item</li>
+          <li>second Item</li>
+          <li>third Item</li>
+        </ul>
+        <li><b>Circle</b></li>
+        <ul type="circle">      <!-- this is the unordered list with circle type bullets -->
+          <li>first Item</li>
+          <li>second Item</li>
+          <li>third Item</li>
+        </ul>
+        <li><b>None -no bullets</b></li>
+        <ul type="none">   <!-- this is the unordered list with no bullets -->
+          <li>first Item</li>
+          <li>second Item</li>
+          <li>third Item</li>
+        </ul>
+
+        <div class="column">    <!-- this is the second column for the ordered lists and definition lists -->
+          <h2>Ordered Lists</h2>
+          <li><b>Decimal</b></li>
+          <ol type="1">       <!-- this is the ordered list with decimal type numbering -->
+            <li>first Item</li>
+            <li>second Item</li>
+            <li>third Item</li>
+          </ol>
+          <li><b>Decimal with Leading Zeros</b></li>
+          <ol type="01">    <!-- this is the ordered list with decimal type numbering and leading zeros -->
+            <li>first Item</li>
+            <li>second Item</li>
+            <li>third Item</li>
+          </ol>
+          <li><b>Lowercase ascii Letters</b></li>
+          <ol type="a">   <!-- this is the ordered list with lowercase ascii letters type numbering -->
+            <li>first Item</li>
+            <li>second Item</li>
+            <li>third Item</li>
+          </ol>
+          <li><b>Lowercase roman numerals</b></li>
+          <ol type="i">  <!-- this is the ordered list with lowercase roman numerals type numbering -->
+            <li>first Item</li>
+            <li>second Item</li>
+            <li>third Item</li>
+          </ol>
+
+          <p>Preceding Text</p>   <!-- this is the text that comes before the nested lists -->
+          <ol type="I">
+            <li>
+              List Item 1          <!-- this is the first item of the main ordered list -->
+              <ol type="a">
+                <li>Nested Item 1.1</li>
+                <li>Nested Item 1.2</li>
+              </ol>
+            </li>
+            <li>
+              List Item 2      <!-- this is the second item of the main ordered list -->
+              <ol>
+                <li>Nested Item 2.1</li>
+                <li>
+                  Nested Item 2.2
+                  <ul type="circle">
+                    <li>Nested Item 2.2.1</li>
+                    <li>
+                      Nested Item 2.2.2
+                      <ul type="square">
+                        <li>Nested Item 2.2.2.1</li>
+                        <li>Nested Item 2.2.2.2</li>
+                      </ul>
+                    </li>
+                    <li>Nested Item 2.2.3</li>
+                  </ul>
+                </li>
+                <li>Nested Item 2.3</li>
+              </ol>
+            </li>
+            <li>
+              List Item 3      <!-- this is the third item of the main ordered list -->
+              <ul type="disc">
+                <li>Nested Item 3.1</li>
+                <li>Nested Item 3.1</li>
+                <li>Nested Item 3.1</li>
+              </ul>
+            </li>
+          </ol>
+
+          <h2 align="center">Common Households Pets</h2>    <!-- this is the heading for the definition list section -->
+          <dl>
+            <dt><b><em>Canis lupus familiaris</em></b></dt>    <!-- this is the first term of the definition list, which is the scientific name for the domestic dog -->
+            <dd>Dommestic dog - a highly variable mammal closely related to the gray wolf</dd>
+            <dt><b><em>Felis silvestris catus</em></b></dt>        <!-- this is the second term of the definition list, which is the scientific name for the domestic cat -->
+            <dd>Dommestic cat - a small, predatory feline mammal</dd>
+            <dt><b><em>Oryctolagus cuniculus domesticus</em></b></dt>
+            <dd>Dommestic rabbit - a small plant-eating mammal with long ears, long hind legs, and a short tail.</dd>
+            <dt><b><em>cavia porcellus</em></b></dt>
+            <dd>Dommestic guinea pig - a small stout-bodied short-eared tailless domesticated rodent of south american origin</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
