@@ -1,33 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Google Form Embed</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-        }
-        iframe {
-            border: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Feedback Survey</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0ede8;
+      --card: #faf9f7;
+      --accent: #4a3f8f;
+      --accent-light: #ede9ff;
+      --accent-mid: #7b6fd4;
+      --text: #1a1a2e;
+      --muted: #6b6880;
+      --border: #d8d4e8;
+      --error: #c0392b;
+      --success: #27ae60;
+      --header-bg: #4a3f8f;
+      --header-text: #fff;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(74,63,143,0.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 40px 16px 60px;
+      color: var(--text);
+    }
+
+    .form-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Header Card */
+    .form-header {
+      background: var(--header-bg);
+      border-radius: var(--radius);
+      padding: 36px 36px 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      border-top: 8px solid var(--accent-mid);
+    }
+    .form-header::before {
+      content: '';
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .form-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .form-header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .required-note {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .required-note span { color: #ff8fa3; }
+
+    /* Question Cards */
+    .question-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      animation: fadeUp 0.4s ease both;
+    }
+    .question-card:focus-within {
+      border-color: var(--accent-mid);
+      box-shadow: 0 4px 24px rgba(74,63,143,0.15);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .question-card:nth-child(2) { animation-delay: 0.05s; }
+    .question-card:nth-child(3) { animation-delay: 0.10s; }
+    .question-card:nth-child(4) { animation-delay: 0.15s; }
+    .question-card:nth-child(5) { animation-delay: 0.20s; }
+    .question-card:nth-child(6) { animation-delay: 0.25s; }
+    .question-card:nth-child(7) { animation-delay: 0.30s; }
+
+    label.question-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.97rem;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .required-star { color: var(--error); margin-left: 3px; }
+
+    /* Inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.93rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input::placeholder, textarea::placeholder { color: #b0adbe; }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6880' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+
+    /* Radio & Checkbox */
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      background: #fff;
+    }
+    .option-item:hover { background: var(--accent-light); border-color: var(--accent-mid); }
+    .option-item input[type="radio"],
+    .option-item input[type="checkbox"] {
+      width: 17px; height: 17px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .option-item span { font-size: 0.93rem; color: var(--text); }
+
+    /* Rating stars */
+    .rating-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .rating-group input[type="radio"] { display: none; }
+    .rating-group label {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fff;
+      margin-bottom: 0;
+    }
+    .rating-group input[type="radio"]:checked + label,
+    .rating-group label:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .rating-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Submit Section */
+    .submit-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      animation: fadeUp 0.4s 0.35s ease both;
+    }
+    .btn-submit {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 13px 32px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.97rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+    .btn-submit:hover { background: #3a3075; }
+    .btn-submit:active { transform: scale(0.97); }
+    .btn-reset {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 4px 0;
+    }
+
+    /* Success State */
+    .success-card {
+      display: none;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 52px 36px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      animation: fadeUp 0.4s ease both;
+    }
+    .success-card .icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-card h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .success-card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Validation */
+    .error-msg {
+      display: none;
+      color: var(--error);
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+    input:invalid:not(:placeholder-shown) ~ .error-msg,
+    textarea:invalid:not(:placeholder-shown) ~ .error-msg { display: block; }
+
+    @media (max-width: 500px) {
+      .form-header, .question-card, .submit-card { padding: 22px 18px; }
+      .form-header h1 { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-<iframe 
-    src="https://docs.google.com/forms/d/e/1FAIpQLSck79EvqY6G-sUEyg3iOhj1H1IA9UnTtw7GOBQ-osGMQvp5Qg/viewform?embedded=true" width="640" height="1337" frameborder="0" marginheight="0" marginwidth="0">
-    height="800" 
-    frameborder="0" 
-    marginheight="0" 
-    marginwidth="0">
-    Loading…
-</iframe>
+<div class="form-wrapper">
 
+  <!-- Header -->
+  <div class="form-header">
+    <h1>Student Feedback Survey</h1>
+    <p>Help us improve your learning experience. Your responses are anonymous and greatly appreciated.</p>
+    <p class="required-note"><span>*</span> Indicates required question</p>
+  </div>
+
+  <!-- Main Form -->
+  <form id="surveyForm" novalidate>
+
+    <!-- Q1: Full Name -->
+    <div class="question-card">
+      <label class="question-label" for="fullName">
+        1. Full Name <span class="required-star">*</span>
+      </label>
+      <input
+        type="text"
+        id="fullName"
+        name="full_name"
+        placeholder="e.g. Ravi Kumar"
+        required
+        minlength="3"
+        autocomplete="name"
+      />
+      <div class="error-msg">Please enter your full name (at least 3 characters).</div>
+    </div>
+
+    <!-- Q2: Email -->
+    <div class="question-card">
+      <label class="question-label" for="email">
+        2. Email Address <span class="required-star">*</span>
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="e.g. ravi@example.com"
+        required
+        autocomplete="email"
+      />
+      <div class="error-msg">Please enter a valid email address.</div>
+    </div>
+
+    <!-- Q3: Phone -->
+    <div class="question-card">
+      <label class="question-label" for="phone">
+        3. Phone Number <span class="required-star">*</span>
+      </label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="e.g. +91 9876543210"
+        required
+        pattern="[+0-9\s\-]{7,15}"
+        autocomplete="tel"
+      />
+      <div class="error-msg">Please enter a valid phone number.</div>
+    </div>
+
+    <!-- Q4: Date of Birth -->
+    <div class="question-card">
+      <label class="question-label" for="dob">
+        4. Date of Birth <span class="required-star">*</span>
+      </label>
+      <input
+        type="date"
+        id="dob"
+        name="date_of_birth"
+        required
+        max=""
+      />
+      <div class="error-msg">Please select your date of birth.</div>
+    </div>
+
+    <!-- Q5: Department (Select) -->
+    <div class="question-card">
+      <label class="question-label" for="department">
+        5. Department / Stream <span class="required-star">*</span>
+      </label>
+      <select id="department" name="department" required>
+        <option value="" disabled selected>— Select your department —</option>
+        <option value="cse">Computer Science & Engineering</option>
+        <option value="ece">Electronics & Communication</option>
+        <option value="mech">Mechanical Engineering</option>
+        <option value="civil">Civil Engineering</option>
+        <option value="it">Information Technology</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Q6: Overall Satisfaction (Rating) -->
+    <div class="question-card">
+      <label class="question-label">
+        6. How satisfied are you with the course content? <span class="required-star">*</span>
+      </label>
+      <div class="rating-group" id="ratingGroup">
+        <input type="radio" name="satisfaction" id="r1" value="1" required><label for="r1">1</label>
+        <input type="radio" name="satisfaction" id="r2" value="2"><label for="r2">2</label>
+        <input type="radio" name="satisfaction" id="r3" value="3"><label for="r3">3</label>
+        <input type="radio" name="satisfaction" id="r4" value="4"><label for="r4">4</label>
+        <input type="radio" name="satisfaction" id="r5" value="5"><label for="r5">5</label>
+      </div>
+      <div class="rating-labels"><span>Not Satisfied</span><span>Very Satisfied</span></div>
+    </div>
+
+    <!-- Q7: Preferred Learning Mode (Radio) -->
+    <div class="question-card">
+      <label class="question-label">
+        7. Preferred mode of learning <span class="required-star">*</span>
+      </label>
+      <div class="options-list" id="modeGroup">
+        <label class="option-item">
+          <input type="radio" name="learning_mode" value="online" required>
+          <span>Online / Remote</span>
+        </label>
+        <label class="option-item">
+          <input type="radio" name="learning_mode" value="offline">
+          <span>Offline / In-person</span>
+        </label>
+        <label class="option-item">
+          <input type="radio" name="learning_mode" value="hybrid">
+          <span>Hybrid (Mix of both)</span>
+        </label>
+        <label class="option-item">
+          <input type="radio" name="learning_mode" value="self_paced">
+          <span>Self-paced / Recorded</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q8: Topics of Interest (Checkbox) -->
+    <div class="question-card">
+      <label class="question-label">
+        8. Which topics interest you the most? <em style="font-weight:400;color:var(--muted);font-size:0.85rem;">(Select all that apply)</em>
+      </label>
+      <div class="options-list">
+        <label class="option-item">
+          <input type="checkbox" name="topics" value="web_dev">
+          <span>Web Development</span>
+        </label>
+        <label class="option-item">
+          <input type="checkbox" name="topics" value="data_science">
+          <span>Data Science & ML</span>
+        </label>
+        <label class="option-item">
+          <input type="checkbox" name="topics" value="cloud">
+          <span>Cloud Computing</span>
+        </label>
+        <label class="option-item">
+          <input type="checkbox" name="topics" value="cybersecurity">
+          <span>Cybersecurity</span>
+        </label>
+        <label class="option-item">
+          <input type="checkbox" name="topics" value="mobile_dev">
+          <span>Mobile App Development</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Q9: Suggestions -->
+    <div class="question-card">
+      <label class="question-label" for="suggestions">
+        9. Any suggestions or feedback for improvement?
+      </label>
+      <textarea
+        id="suggestions"
+        name="suggestions"
+        placeholder="Share your thoughts, suggestions, or what you'd like to see improved…"
+        maxlength="500"
+      ></textarea>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-card">
+      <button type="submit" class="btn-submit">Submit Form</button>
+      <button type="button" class="btn-reset" onclick="resetForm()">Clear form</button>
+    </div>
+
+  </form>
+
+  <!-- Success Message -->
+  <div class="success-card" id="successCard">
+    <div class="icon">✅</div>
+    <h2>Response Recorded!</h2>
+    <p>Thank you for completing the survey. Your feedback helps us improve the learning experience for everyone.</p>
+  </div>
+
+</div>
+
+<script>
+  // Set max date for DOB to today
+  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+
+  const form = document.getElementById('surveyForm');
+  const successCard = document.getElementById('successCard');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let valid = true;
+    let firstInvalid = null;
+
+    // Text / email / tel / date / select validation
+    const fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+    fields.forEach(field => {
+      if (!field.validity.valid || field.value.trim() === '') {
+        field.style.borderColor = 'var(--error)';
+        if (!firstInvalid) firstInvalid = field;
+        valid = false;
+      } else {
+        field.style.borderColor = '';
+      }
+    });
+
+    // Radio group validation
+    const radioGroups = ['satisfaction', 'learning_mode'];
+    radioGroups.forEach(name => {
+      const radios = form.querySelectorAll(`input[name="${name}"]`);
+      const checked = [...radios].some(r => r.checked);
+      if (!checked) {
+        const card = radios[0].closest('.question-card');
+        card.style.borderColor = 'var(--error)';
+        if (!firstInvalid) firstInvalid = radios[0];
+        valid = false;
+      } else {
+        const card = radios[0].closest('.question-card');
+        card.style.borderColor = '';
+      }
+    });
+
+    if (!valid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstInvalid.focus();
+      return;
+    }
+
+    // Show success
+    form.style.display = 'none';
+    document.querySelector('.form-header').style.display = 'none';
+    successCard.style.display = 'block';
+    successCard.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Live border reset on input
+  form.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', () => { el.style.borderColor = ''; });
+    el.addEventListener('change', () => { el.style.borderColor = ''; });
+  });
+
+  function resetForm() {
+    form.reset();
+    form.querySelectorAll('input, select, textarea').forEach(el => { el.style.borderColor = ''; });
+  }
+</script>
 </body>
 </html>

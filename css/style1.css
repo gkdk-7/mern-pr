@@ -1,0 +1,17 @@
+            
+@import url("./style2.css");
+            
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                padding: -30px ;
+
+            }
+            fieldset {
+                border: 2px solid #ccc;
+                padding: 20px;
+                width: 300px;
+                background-color: azure;
+            }
