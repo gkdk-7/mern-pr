@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Directory</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #222;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      max-width: 900px;
+      margin: 0 auto 1.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .toolbar input, .toolbar select {
+      flex: 1;
+      min-width: 160px;
+      padding: 10px 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .toolbar input:focus, .toolbar select:focus {
+      border-color: #4f6ef7;
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
+    }
+
+    .count {
+      font-size: 13px;
+      color: #888;
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 18px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #e8eaf0;
+      padding: 1.4rem 1.3rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 6px 24px rgba(79,110,247,0.13);
+      transform: translateY(-3px);
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .emp-name {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 3px;
+    }
+
+    .emp-role {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .badge-eng { background: #dbeafe; color: #1e3a8a; }
+    .badge-mkt { background: #d1fae5; color: #065f46; }
+    .badge-hr  { background: #fef3c7; color: #78350f; }
+    .badge-fin { background: #fce7f3; color: #831843; }
+    .badge-ops { background: #ede9fe; color: #4c1d95; }
+    .badge-des { background: #ffedd5; color: #7c2d12; }
+
+    .meta { display: flex; flex-direction: column; gap: 6px; }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #555;
+    }
+
+    .meta-row svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      color: #999;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 12px 0;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      color: #aaa;
+      font-size: 15px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 12px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>&#128188; Employee Directory</h1>
+  <p class="subtitle">Search and browse all team members</p>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Search by name or role…" oninput="render()" />
+    <select id="dept" onchange="render()">
+      <option value="">All Departments</option>
+      <option>Engineering</option>
+      <option>Marketing</option>
+      <option>HR</option>
+      <option>Finance</option>
+      <option>Operations</option>
+      <option>Design</option>
+    </select>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>© 2026 Acme Corp &mdash; Internal Use Only</footer>
+
+  <script>
+    const employees = [
+      { name: "Arjun Sharma",  role: "Senior Backend Engineer", dept: "Engineering", email: "arjun@acme.com",  phone: "+91 98201 11001", joined: "Mar 2020", salary: "₹18L", badge: "badge-eng", avatarBg: "#dbeafe", avatarFg: "#1e3a8a" },
+      { name: "Priya Nair",    role: "Product Designer",        dept: "Design",      email: "priya@acme.com",  phone: "+91 98201 22002", joined: "Jul 2021", salary: "₹14L", badge: "badge-des", avatarBg: "#ffedd5", avatarFg: "#7c2d12" },
+      { name: "Rohan Mehta",   role: "Marketing Manager",       dept: "Marketing",   email: "rohan@acme.com",  phone: "+91 98201 33003", joined: "Jan 2019", salary: "₹16L", badge: "badge-mkt", avatarBg: "#d1fae5", avatarFg: "#065f46" },
+      { name: "Sneha Reddy",   role: "HR Business Partner",     dept: "HR",          email: "sneha@acme.com",  phone: "+91 98201 44004", joined: "Nov 2022", salary: "₹12L", badge: "badge-hr",  avatarBg: "#fef3c7", avatarFg: "#78350f" },
+      { name: "Karan Patel",   role: "Finance Analyst",         dept: "Finance",     email: "karan@acme.com",  phone: "+91 98201 55005", joined: "Feb 2021", salary: "₹13L", badge: "badge-fin", avatarBg: "#fce7f3", avatarFg: "#831843" },
+      { name: "Divya Kumar",   role: "Frontend Engineer",       dept: "Engineering", email: "divya@acme.com",  phone: "+91 98201 66006", joined: "Aug 2023", salary: "₹15L", badge: "badge-eng", avatarBg: "#dbeafe", avatarFg: "#1e3a8a" },
+      { name: "Ankit Joshi",   role: "Operations Lead",         dept: "Operations",  email: "ankit@acme.com",  phone: "+91 98201 77007", joined: "May 2018", salary: "₹17L", badge: "badge-ops", avatarBg: "#ede9fe", avatarFg: "#4c1d95" },
+      { name: "Meera Singh",   role: "Content Strategist",      dept: "Marketing",   email: "meera@acme.com",  phone: "+91 98201 88008", joined: "Sep 2022", salary: "₹11L", badge: "badge-mkt", avatarBg: "#d1fae5", avatarFg: "#065f46" },
+      { name: "Vikram Bose",   role: "DevOps Engineer",         dept: "Engineering", email: "vikram@acme.com", phone: "+91 98201 99009", joined: "Apr 2021", salary: "₹19L", badge: "badge-eng", avatarBg: "#dbeafe", avatarFg: "#1e3a8a" },
+      { name: "Tanvi Desai",   role: "UX Researcher",           dept: "Design",      email: "tanvi@acme.com",  phone: "+91 98201 10010", joined: "Dec 2020", salary: "₹13L", badge: "badge-des", avatarBg: "#ffedd5", avatarFg: "#7c2d12" },
+      { name: "Nikhil Varma",  role: "Payroll Specialist",      dept: "Finance",     email: "nikhil@acme.com", phone: "+91 98201 11011", joined: "Jun 2019", salary: "₹12L", badge: "badge-fin", avatarBg: "#fce7f3", avatarFg: "#831843" },
+      { name: "Kavya Iyer",    role: "Talent Acquisition",      dept: "HR",          email: "kavya@acme.com",  phone: "+91 98201 12012", joined: "Oct 2023", salary: "₹11L", badge: "badge-hr",  avatarBg: "#fef3c7", avatarFg: "#78350f" },
+    ];
+
+    function initials(name) {
+      return name.split(" ").map(w => w[0]).join("").toUpperCase();
+    }
+
+    const mailSVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 5l6 4 6-4"/></svg>`;
+    const phoneSVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h3l1.5 3.5-2 1.5a8 8 0 0 0 3.5 3.5l1.5-2L14 10v3a1 1 0 0 1-1 1C6 14 2 8 2 3a1 1 0 0 1 1-1z"/></svg>`;
+    const calSVG  = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="2"/><line x1="2" y1="7" x2="14" y2="7"/><line x1="5" y1="1" x2="5" y2="5"/><line x1="11" y1="1" x2="11" y2="5"/></svg>`;
+    const coinSVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v6M6 6.5a2 2 0 0 1 4 0c0 1.2-2 2-2 2s-2 .8-2 2a2 2 0 0 0 4 0"/></svg>`;
+
+    function render() {
+      const q = document.getElementById("search").value.toLowerCase();
+      const d = document.getElementById("dept").value;
+
+      const filtered = employees.filter(e =>
+        (!q || e.name.toLowerCase().includes(q) || e.role.toLowerCase().includes(q)) &&
+        (!d || e.dept === d)
+      );
+
+      document.getElementById("count").textContent =
+        filtered.length + " employee" + (filtered.length !== 1 ? "s" : "");
+
+      const grid = document.getElementById("grid");
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="no-results">No employees found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(e => `
+        <div class="card">
+          <div class="avatar" style="background:${e.avatarBg};color:${e.avatarFg}">${initials(e.name)}</div>
+          <div class="emp-name">${e.name}</div>
+          <div class="emp-role">${e.role}</div>
+          <span class="badge ${e.badge}">${e.dept}</span>
+          <hr class="divider"/>
+          <div class="meta">
+            <div class="meta-row">${mailSVG} ${e.email}</div>
+            <div class="meta-row">${phoneSVG} ${e.phone}</div>
+            <div class="meta-row">${calSVG} Joined ${e.joined}</div>
+            <div class="meta-row">${coinSVG} ${e.salary} / year</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    render();
+  </script>
+
+</body>
+</html>

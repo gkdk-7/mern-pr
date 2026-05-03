@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+      header {
+        border: 5px solid #c4bbbb;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    justify-content: space-evenly;
+        padding: 20px;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 8px;
+        background: white;
+      }
+         table {
+            justify-content: space-evenly;
+          margin-top: 20px;
+          width: 80%;
+          align-items: center;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+      <input type="text" id="pID" placeholder="product ID..." />
+      <input type="text" id="name" placeholder="product name..." />
+      <input type="url" id="url" placeholder="image url" />
+      <input type="number" id="price" placeholder="price" />
+      <button onclick="addProduct()">Add Product</button>
+</header>
+      <table>
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Image</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
+    
+
+    <script>
+      let tbody = document.getElementById("productTableBody");
+
+      function addProduct() {
+        let pID = document.getElementById("pID").value;
+        let name = document.getElementById("name").value;
+        let url = document.getElementById("url").value;
+        let price = document.getElementById("price").value;
+
+        let tr = document.createElement("tr");
+
+        let td0 = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+
+        td0.innerText = pID;
+        td1.innerText = name;
+        td2.innerHTML = `<img src="${url}" style="max-width:100px;">`;
+        td3.innerText = price;
+
+        tr.appendChild(td0);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+
+        tbody.appendChild(tr);
+
+        document.getElementById("pID").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("url").value = "";
+        document.getElementById("price").value = "";
+      }
+    </script>
+  </body>
+</html>

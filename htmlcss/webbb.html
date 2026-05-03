@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ABC Training Institute</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --navy-mid: #243257;
+      --gold: #c8902a;
+      --gold-light: #e8b040;
+      --red: #9b2335;
+      --cream: #f5f0e8;
+      --white: #ffffff;
+      --text-light: #cdd5e0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 56px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 28px; height: 28px;
+      background: var(--gold);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 900; color: var(--navy);
+    }
+
+    .nav-links { display: flex; gap: .2rem; }
+
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 600;
+      padding: .4rem 1rem;
+      border-radius: 4px;
+      transition: background .2s, color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      min-height: 100vh;
+      padding: 4rem 5vw;
+    }
+
+    section + section { border-top: 1px solid rgba(200,144,42,.25); }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: var(--gold-light);
+      margin-bottom: 2rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* ── HOME ── */
+    #home {
+      background:
+        linear-gradient(160deg, rgba(26,39,68,.96) 50%, rgba(155,35,53,.18)),
+        url('https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=1400&q=80') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1.5rem;
+      padding-top: 6rem;
+    }
+
+    #home h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 1.15;
+      color: var(--white);
+      max-width: 700px;
+    }
+
+    #home h1 span { color: var(--gold-light); }
+
+    #home p.tagline {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .media-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .media-box {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(200,144,42,.3);
+      border-radius: 10px;
+      overflow: hidden;
+      flex: 1 1 360px;
+    }
+
+    .media-box label {
+      display: block;
+      background: var(--navy-mid);
+      padding: .5rem 1rem;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .media-box video,
+    .media-box audio {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+
+    .media-box audio { padding: .75rem; background: var(--navy-mid); }
+
+    /* ── COURSES ── */
+    #courses {
+      background: var(--navy-mid);
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .course-card {
+      background: var(--navy);
+      border: 1px solid rgba(200,144,42,.25);
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--red));
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0,0,0,.35);
+    }
+
+    .course-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      margin-bottom: 1rem;
+    }
+
+    .course-card ol,
+    .course-card ul {
+      padding-left: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+    }
+
+    .course-card li {
+      font-size: .92rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* ── SCHEDULE ── */
+    #schedule { background: var(--navy); }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-width: 860px;
+      margin: 0 auto;
+      border-radius: 10px;
+      border: 1px solid rgba(200,144,42,.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,.3);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr {
+      background: var(--red);
+    }
+
+    thead th {
+      padding: .9rem 1.4rem;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--white);
+      text-align: left;
+    }
+
+    tbody tr { border-bottom: 1px solid rgba(200,144,42,.12); transition: background .2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,.03); }
+    tbody tr:hover { background: rgba(200,144,42,.1); }
+
+    tbody td {
+      padding: .85rem 1.4rem;
+      font-size: .95rem;
+      color: var(--text-light);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .65rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .badge.online  { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+    .badge.offline { background: rgba(251,146,60,.15); color: #fb923c; border: 1px solid rgba(251,146,60,.3); }
+
+    /* ── REGISTER ── */
+    #register { background: var(--navy-mid); }
+
+    .form-container {
+      max-width: 560px;
+      margin: 0 auto;
+      background: var(--navy);
+      border: 1px solid rgba(200,144,42,.3);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,.4);
+    }
+
+    .form-group { margin-bottom: 1.3rem; }
+
+    .form-group label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-bottom: .45rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(200,144,42,.3);
+      border-radius: 6px;
+      padding: .7rem 1rem;
+      color: var(--white);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s, background .2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+      background: rgba(200,144,42,.08);
+    }
+
+    .form-group select option { background: var(--navy); }
+
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      padding: .4rem 0;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .95rem;
+      color: var(--text-light);
+      text-transform: none;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      width: 16px; height: 16px;
+      accent-color: var(--gold);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: .85rem;
+      background: linear-gradient(135deg, var(--red), #7a1828);
+      border: none;
+      border-radius: 6px;
+      color: var(--white);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: .5rem;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .btn-submit:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111d35;
+      text-align: center;
+      padding: 1.25rem;
+      font-size: .82rem;
+      color: rgba(205,213,224,.45);
+      border-top: 1px solid rgba(200,144,42,.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="brand">
+    <span class="brand-icon">A</span>
+    ABC Training Institute
+  </a>
+  <div class="nav-links">
+    <a href="#home"     class="active">Home</a>
+    <a href="#courses">Courses</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#register">Register</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home">
+  <h1>Welcome to <span>ABC Training Institute</span></h1>
+  <p class="tagline">Empowering Your Future with Quality Education — hands-on courses taught by industry experts.</p>
+
+  <div class="media-row">
+    <div class="media-box">
+      <label>▶ Promo Video</label>
+      <video controls poster="https://images.unsplash.com/photo-1587620962725-abab19836100?w=600&q=80">
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
+        Your browser does not support video.
+      </video>
+    </div>
+
+    <div class="media-box">
+      <label>🎧 Institute Intro Audio</label>
+      <audio controls>
+        <source src="https://www.w3schools.com/html/horse.ogg" type="audio/ogg"/>
+        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg"/>
+        Your browser does not support audio.
+      </audio>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <h2 class="section-title">Our Courses</h2>
+  <div class="courses-grid">
+
+    <div class="course-card">
+      <h3>Web Development</h3>
+      <ul>
+        <li>HTML &amp; CSS</li>
+        <li>JavaScript</li>
+        <li>React JS</li>
+        <li>Node.js Basics</li>
+      </ul>
+    </div>
+
+    <div class="course-card">
+      <h3>Programming Languages</h3>
+      <ol>
+        <li>Python</li>
+        <li>Java</li>
+        <li>C++</li>
+        <li>Data Structures</li>
+      </ol>
+    </div>
+
+    <div class="course-card">
+      <h3>Database &amp; Cloud</h3>
+      <ul>
+        <li>MySQL &amp; PostgreSQL</li>
+        <li>MongoDB</li>
+        <li>AWS Fundamentals</li>
+        <li>Docker Basics</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <h2 class="section-title">Course Schedule</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Trainer</th>
+          <th>Duration</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>HTML &amp; CSS</td>
+          <td>Ashoka</td>
+          <td>2 Weeks</td>
+          <td><span class="badge online">Online</span></td>
+        </tr>
+        <tr>
+          <td>Java</td>
+          <td>Ms. Rahul</td>
+          <td>4 Weeks</td>
+          <td><span class="badge offline">Offline</span></td>
+        </tr>
+        <tr>
+          <td>React JS</td>
+          <td>Mr. Anita</td>
+          <td>3 Weeks</td>
+          <td><span class="badge online">Online</span></td>
+        </tr>
+        <tr>
+          <td>Python</td>
+          <td>Ms. Priya</td>
+          <td>5 Weeks</td>
+          <td><span class="badge online">Online</span></td>
+        </tr>
+        <tr>
+          <td>C++</td>
+          <td>Mr. Suresh</td>
+          <td>3 Weeks</td>
+          <td><span class="badge offline">Offline</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <h2 class="section-title">Student Registration</h2>
+  <div class="form-container">
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Your full name" required/>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required/>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" placeholder="+91 00000 00000"/>
+    </div>
+
+    <div class="form-group">
+      <label for="course">Select Course</label>
+      <select id="course">
+        <option>HTML &amp; CSS</option>
+        <option>JavaScript</option>
+        <option>React JS</option>
+        <option>Java</option>
+        <option>Python</option>
+        <option>C++</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Gender</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gender" value="male" checked/> Male</label>
+        <label><input type="radio" name="gender" value="female"/> Female</label>
+        <label><input type="radio" name="gender" value="other"/> Other</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="Tell us about your learning goals…"></textarea>
+    </div>
+
+    <button class="btn-submit" onclick="alert('Registration submitted! We will contact you soon.')">
+      Register Now
+    </button>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2026 ABC Training Institute — All Rights Reserved
+</footer>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 80) current = sec.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+
+</body>
+</html>

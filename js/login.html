@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AcmeCorp — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --surface2: #1b1f2b;
+      --accent: #c8a96e;
+      --accent2: #e8c98e;
+      --text: #f0ece4;
+      --muted: #8a8a96;
+      --border: rgba(200,169,110,0.18);
+      --danger: #ef4444;
+      --danger-bg: rgba(239,68,68,0.1);
+      --success: #22c55e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 20%, rgba(200,169,110,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 80% 80%, rgba(200,169,110,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .brand a {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .panel-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    .panel-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .panel-body h2 span { color: var(--accent); }
+
+    .panel-body p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 360px;
+      margin-bottom: 2.5rem;
+    }
+
+    .features-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+    .features-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .feat-dot {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(200,169,110,0.12);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .panel-footer { font-size: 12px; color: var(--muted); }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 4rem;
+      position: relative;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 2rem; left: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link svg { width: 16px; height: 16px; }
+
+    .login-box { width: 100%; max-width: 380px; }
+
+    .login-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .login-box .tagline {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 2.2rem;
+    }
+
+    /* ERROR */
+    .error-box {
+      display: none;
+      background: var(--danger-bg);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: #fca5a5;
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 10px;
+    }
+    .error-box.show { display: flex; }
+
+    /* SUCCESS */
+    .success-box {
+      display: none;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: #86efac;
+      margin-bottom: 1.2rem;
+      align-items: center;
+      gap: 10px;
+    }
+    .success-box.show { display: flex; }
+
+    /* FORM */
+    .field { margin-bottom: 1.2rem; }
+
+    .field label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--surface2);
+      border: 1px solid rgba(200,169,110,0.15);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input::placeholder { color: var(--muted); }
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,169,110,0.12);
+    }
+    .field input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .toggle-pw:hover { color: var(--accent); }
+    .toggle-pw svg { width: 18px; height: 18px; }
+
+    .hint {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-login:hover { background: var(--accent2); transform: translateY(-2px); }
+    .btn-login:active { transform: translateY(0); }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 1.4rem 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .btn-reset {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .login-footer a { color: var(--accent); text-decoration: none; }
+    .login-footer a:hover { text-decoration: underline; }
+
+    /* ATTEMPT COUNTER */
+    .attempts-left {
+      display: none;
+      font-size: 12px;
+      color: #fca5a5;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .shake { animation: shake 0.35s ease; }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="brand"><a href="index.html">AcmeCorp</a></div>
+
+    <div class="panel-body">
+      <h2>Your team,<br/><span>one portal.</span></h2>
+      <p>Access the complete employee directory, department insights, and more — all secured behind your credentials.</p>
+
+      <ul class="features-list">
+        <li><span class="feat-dot">👥</span> Full employee directory with 12+ profiles</li>
+        <li><span class="feat-dot">🔍</span> Smart search and department filtering</li>
+        <li><span class="feat-dot">📊</span> Salary, roles, and contact details</li>
+        <li><span class="feat-dot">🔐</span> Secure, credential-protected access</li>
+      </ul>
+    </div>
+
+    <p class="panel-footer">© 2026 AcmeCorp · Internal use only</p>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M10 12L6 8l4-4"/>
+      </svg>
+      Back to Home
+    </a>
+
+    <div class="login-box">
+      <h3>Welcome back</h3>
+      <p class="tagline">Enter your credentials to access the portal.</p>
+
+      <div class="error-box" id="errorBox">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="8" cy="8" r="6"/><path d="M8 5v3.5M8 11h.01"/>
+        </svg>
+        <span id="errorText">Invalid username or password.</span>
+      </div>
+
+      <div class="success-box" id="successBox">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="8" cy="8" r="6"/><path d="M5.5 8l2 2 3-3"/>
+        </svg>
+        Login successful! Redirecting…
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="e.g. admin" autocomplete="username" required/>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required/>
+            <button type="button" class="toggle-pw" id="togglePw" title="Show/hide password">
+              <svg id="eyeIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z"/>
+                <circle cx="8" cy="8" r="2"/>
+              </svg>
+            </button>
+          </div>
+          <p class="hint">Hint: username is <strong style="color:var(--accent)">admin</strong>, password is <strong style="color:var(--accent)">1234</strong></p>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">Login →</button>
+
+        <p class="attempts-left" id="attemptsLeft"></p>
+
+        <div class="divider">or</div>
+
+        <button type="button" class="btn-reset" id="resetBtn">Clear fields</button>
+      </form>
+
+      <p class="login-footer">
+        Not an employee? <a href="index.html">Return to homepage</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Valid credentials
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "1234";
+    const MAX_ATTEMPTS = 5;
+
+    let attempts = 0;
+
+    const form       = document.getElementById("loginForm");
+    const errorBox   = document.getElementById("errorBox");
+    const errorText  = document.getElementById("errorText");
+    const successBox = document.getElementById("successBox");
+    const loginBtn   = document.getElementById("loginBtn");
+    const resetBtn   = document.getElementById("resetBtn");
+    const togglePw   = document.getElementById("togglePw");
+    const pwInput    = document.getElementById("password");
+    const unInput    = document.getElementById("username");
+    const attemptsEl = document.getElementById("attemptsLeft");
+
+    // Show/hide password toggle
+    togglePw.addEventListener("click", () => {
+      const isPassword = pwInput.type === "password";
+      pwInput.type = isPassword ? "text" : "password";
+      document.getElementById("eyeIcon").innerHTML = isPassword
+        ? `<path d="M2 2l12 12M6.5 6.6A3 3 0 0 0 8 11a3 3 0 0 0 2.9-2.2M4.2 4.4C2.6 5.6 1 8 1 8s3 5 7 5c1.5 0 2.9-.5 4-1.4M10.5 5.7A7 7 0 0 1 15 8s-3 5-7 5"/>`
+        : `<path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/>`;
+    });
+
+    // Reset button
+    resetBtn.addEventListener("click", () => {
+      form.reset();
+      hideError();
+      unInput.focus();
+    });
+
+    // Submit handler
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const user = unInput.value.trim();
+      const pass = pwInput.value.trim();
+
+      if (!user || !pass) {
+        showError("Please fill in both fields.");
+        return;
+      }
+
+      if (user === VALID_USERNAME && pass === VALID_PASSWORD) {
+        // ✅ SUCCESS
+        hideError();
+        successBox.classList.add("show");
+        loginBtn.disabled = true;
+
+        localStorage.setItem("username", user);
+        localStorage.setItem("loggedIn", "true");
+
+        setTimeout(() => {
+          window.location.href = "table2.html";
+        }, 1200);
+
+      } else {
+        // ❌ WRONG CREDENTIALS
+        attempts++;
+        const remaining = MAX_ATTEMPTS - attempts;
+
+        pwInput.value = "";
+        pwInput.classList.add("error-input");
+        unInput.classList.add("error-input");
+
+        // Shake the form box
+        const loginBox = document.querySelector(".login-box");
+        loginBox.classList.remove("shake");
+        void loginBox.offsetWidth;
+        loginBox.classList.add("shake");
+
+        if (remaining <= 0) {
+          showError("Too many failed attempts. Please try again later.");
+          loginBtn.disabled = true;
+          attemptsEl.style.display = "none";
+          setTimeout(() => {
+            loginBtn.disabled = false;
+            attempts = 0;
+            hideError();
+          }, 15000);
+        } else {
+          showError(`Incorrect username or password.`);
+          attemptsEl.style.display = "block";
+          attemptsEl.textContent = `${remaining} attempt${remaining !== 1 ? "s" : ""} remaining.`;
+        }
+
+        pwInput.focus();
+
+        setTimeout(() => {
+          pwInput.classList.remove("error-input");
+          unInput.classList.remove("error-input");
+        }, 1500);
+      }
+    });
+
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorBox.classList.add("show");
+      successBox.classList.remove("show");
+    }
+
+    function hideError() {
+      errorBox.classList.remove("show");
+      successBox.classList.remove("show");
+      attemptsEl.style.display = "none";
+    }
+
+    // Clear errors on input
+    [unInput, pwInput].forEach(el => {
+      el.addEventListener("input", hideError);
+    });
+  </script>
+
+</body>
+</html>

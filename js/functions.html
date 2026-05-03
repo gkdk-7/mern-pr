@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function employeeDetails(name, role, salary, address) {
+        console.log("this is a normal function");
+
+        console.log("name", name);
+        console.log("role", role);
+        console.log("salary", salary);
+        console.log("address", address);
+
+        return [name, role, salary, address]
+      }
+
+        employeeDetails("gk", "developer", 50000, "chennai");
+        employeeDetails("gk", "developer", 50000, "chennai");
+        employeeDetails("gk", "developer", 50000, "chennai");
+        employeeDetails("gk", "developer", 50000, "chennai");
+        employeeDetails("gk", "developer", 50000, "chennai");
+        
+
+        (function () {
+            let apikey = "AIzaSyCNWdsVGdB7Ou-DRVDEo0_56QuULHrF4dw"
+          console.log("this is an Immediate intermediate function");
+          return apikey;
+        });
+      
+        let arrowFun=()=>console.log("this is an arrow function");
+        arrowFun()
+        arrowFun()
+        let test=(skills,name)=>{
+            let a=10
+            let b=20
+            console.log("name:", name,"skills:", skills);
+        }
+        //   test(["html", "css", "javascript"], "gk");
+        //   function outrFun(){
+        //     function innerFun(){
+        //         console.log("this is an inner function");
+        //     }
+        //     console.log("this is an outer function");
+        //     innerFun()
+        //   }
+        //   outrFun()
+        
+        function outerFun(){
+            console.log("this is an outer function");
+             return function innerFun(){
+                console.log("this is an inner function");
+             }
+            }
+            let result=outerFun(10,20);
+
+
+
+
+            function homepage(){
+                console.log("this is homepage");
+
+            }
+            function loginpage(){
+                console.log("this is login page");
+
+            }
+            function registerpage(){
+                console.log("this is register page");
+
+            }
+            homepage(registerpage(),loginpage())
+
+
+
+            
+
+
+          
+
+
+    </script>
+</html>
+
+  </body>
