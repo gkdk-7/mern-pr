@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Result Table</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background: #333;
+      color: white;
+    }
+
+    .green { background-color: #a5d6a7; }
+    .yellow { background-color: #fff59d; }
+    .orange { background-color: #ffcc80; }
+    .red { background-color: #ef9a9a; }
+
+    button {
+      padding: 5px 10px;
+      margin: 2px;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 5px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Student Result Table</h2>
+
+<table id="studentTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Roll No</th>
+      <th>CNN</th>
+      <th>CPP</th>
+      <th>ADE</th>
+      <th>DSA</th>
+      <th>Total</th>
+      <th>Percentage</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+let students = [
+  {name:'Ravi', rollNo:'HU2025', marks:{CNN:50, CPP:78, ADE:80, DSA:69}},
+  {name:'Amit', rollNo:'HU2026', marks:{CNN:85, CPP:88, ADE:90, DSA:92}},
+  {name:'Sneha', rollNo:'HU2027', marks:{CNN:60, CPP:70, ADE:65, DSA:68}},
+  {name:'Priya', rollNo:'HU2028', marks:{CNN:40, CPP:55, ADE:50, DSA:45}},
+  {name:'Rahul', rollNo:'HU2029', marks:{CNN:75, CPP:80, ADE:70, DSA:78}},
+  {name:'Kiran', rollNo:'HU2030', marks:{CNN:90, CPP:92, ADE:88, DSA:95}},
+  {name:'Anjali', rollNo:'HU2031', marks:{CNN:55, CPP:60, ADE:58, DSA:57}},
+  {name:'Vikas', rollNo:'HU2032', marks:{CNN:65, CPP:70, ADE:68, DSA:66}},
+  {name:'Deepak', rollNo:'HU2033', marks:{CNN:45, CPP:50, ADE:48, DSA:42}},
+  {name:'Meena', rollNo:'HU2034', marks:{CNN:78, CPP:82, ADE:80, DSA:79}},
+  {name:'Arjun', rollNo:'HU2035', marks:{CNN:88, CPP:85, ADE:90, DSA:87}},
+  {name:'Pooja', rollNo:'HU2036', marks:{CNN:62, CPP:64, ADE:66, DSA:60}},
+  {name:'Suresh', rollNo:'HU2037', marks:{CNN:52, CPP:58, ADE:54, DSA:50}},
+  {name:'Neha', rollNo:'HU2038', marks:{CNN:70, CPP:75, ADE:72, DSA:74}},
+  {name:'Ramesh', rollNo:'HU2039', marks:{CNN:48, CPP:45, ADE:50, DSA:47}},
+  {name:'Lakshmi', rollNo:'HU2040', marks:{CNN:92, CPP:94, ADE:96, DSA:91}},
+  {name:'Gopal', rollNo:'HU2041', marks:{CNN:66, CPP:68, ADE:65, DSA:67}},
+  {name:'Divya', rollNo:'HU2042', marks:{CNN:80, CPP:82, ADE:85, DSA:83}},
+  {name:'Manoj', rollNo:'HU2043', marks:{CNN:55, CPP:57, ADE:60, DSA:58}},
+  {name:'Keerthi', rollNo:'HU2044', marks:{CNN:89, CPP:91, ADE:88, DSA:90}}
+];
+
+function calculateTotal(marks) {
+  return marks.CNN + marks.CPP + marks.ADE + marks.DSA;
+}
+
+function calculatePercentage(total) {
+  return (total / 400 * 100).toFixed(2);
+}
+
+function getColorClass(percent) {
+  if (percent >= 85) return "green";
+  else if (percent >= 65) return "yellow";
+  else if (percent >= 55) return "orange";
+  else return "red";
+}
+
+function renderTable() {
+  let tbody = document.querySelector("#studentTable tbody");
+  tbody.innerHTML = "";
+
+  students.forEach((student, index) => {
+    let total = calculateTotal(student.marks);
+    let percent = calculatePercentage(total);
+    let row = `<tr class="${getColorClass(percent)}">
+      <td>${student.name}</td>
+      <td>${student.rollNo}</td>
+      <td>${student.marks.CNN}</td>
+      <td>${student.marks.CPP}</td>
+      <td>${student.marks.ADE}</td>
+      <td>${student.marks.DSA}</td>
+      <td>${total}</td>
+      <td>${percent}%</td>
+      <td>
+        <button onclick="editStudent(${index})">Edit</button>
+        <button onclick="deleteStudent(${index})">Delete</button>
+      </td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+}
+
+function deleteStudent(index) {
+  students.splice(index, 1);
+  renderTable();
+}
+
+function editStudent(index) {
+  let student = students[index];
+
+  let newName = prompt("Enter Name", student.name);
+  let cnn = prompt("CNN Marks", student.marks.CNN);
+  let cpp = prompt("CPP Marks", student.marks.CPP);
+  let ade = prompt("ADE Marks", student.marks.ADE);
+  let dsa = prompt("DSA Marks", student.marks.DSA);
+
+  if (newName && cnn && cpp && ade && dsa) {
+    students[index] = {
+      name: newName,
+      rollNo: student.rollNo,
+      marks: {
+        CNN: +cnn,
+        CPP: +cpp,
+        ADE: +ade,
+        DSA: +dsa
+      }
+    };
+    renderTable();
+  }
+}
+
+renderTable();
+</script>
+
+</body>
+</html>
